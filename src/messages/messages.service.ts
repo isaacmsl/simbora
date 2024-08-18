@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { WppconnectService } from 'src/wppconnect/wppconnect.service';
+import axios from 'axios';
+
+const SIMBORA_API_URI = String(process.env.SIMBORA_API_URI);
 
 @Injectable()
 export class MessagesService {
@@ -11,18 +14,22 @@ export class MessagesService {
       throw new Error('Client not initialized');
     }
 
-    client.onMessage((message) => {
-      if (message.body === 'Hello') {
-        client
-          .sendText(message.from, 'Hello, how I may help you?')
-          .then((result) => {
-            console.log(message);
-            console.log('Result: ', result);
-          })
-          .catch((erro) => {
-            console.error('Error when sending: ', erro);
-          });
-      }
+    client.onMessage(async (message) => {
+      const response = await axios.get(SIMBORA_API_URI, {
+        params: {
+          query: message.body
+        }
+      });
+      const answer = response.data;
+      client
+        .sendText(message.from, answer)
+        .then((result) => {
+          console.log(message);
+          console.log('Result: ', result);
+        })
+        .catch((erro) => {
+          console.error('Error when sending: ', erro);
+        });
     });
   }
 }
