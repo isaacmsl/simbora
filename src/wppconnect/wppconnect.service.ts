@@ -17,6 +17,7 @@ export class WppconnectService {
           console.log('Status Session: ', statusSession);
           console.log('Session name: ', session);
         },
+        useChrome: false,
         headless: true,
         tokenStore: 'file',
         folderNameToken: './tokens',
