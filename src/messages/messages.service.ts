@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { WppconnectService } from 'src/wppconnect/wppconnect.service';
 import axios from 'axios';
 
-const SIMBORA_API_URI = String(process.env.SIMBORA_API_URI);
-
 @Injectable()
 export class MessagesService {
   constructor(private readonly wppconnectService: WppconnectService) {}
 
   async handleMessage() {
+    const SIMBORA_API_URI = String(process.env.SIMBORA_API_URI);
+    
     const client = this.wppconnectService.getClient();
     if (!client) {
       throw new Error('Client not initialized');
